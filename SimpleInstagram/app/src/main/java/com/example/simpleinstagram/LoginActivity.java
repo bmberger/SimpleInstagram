@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             launchApp();
         }
         usernameView = (EditText) findViewById(R.id.ivUsernameInput);
-        passwordView = (EditText) findViewById(R.id.ivPasswordInput);
+        passwordView = (TextInputEditText) findViewById(R.id.ivPasswordInput);
     }
 
     @Override
