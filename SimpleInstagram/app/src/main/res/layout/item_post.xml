@@ -40,19 +40,21 @@
         android:layout_marginStart="68dp"
         android:layout_marginLeft="68dp"
         android:layout_marginTop="8dp"
-        android:text="username" />
+        android:text="username"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/bottomUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/postImage"
+        android:layout_below="@+id/heartImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginLeft="31dp"
-        android:layout_marginTop="37dp"
-        android:text="username" />
+        android:layout_marginStart="29dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="0dp"
+        android:text="username"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/profilePerson"
@@ -68,14 +70,14 @@
 
     <ImageView
         android:id="@+id/archiveImage"
-        android:layout_width="51dp"
-        android:layout_height="54dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="322dp"
-        android:layout_marginLeft="322dp"
-        android:layout_marginTop="-21dp"
+        android:layout_marginStart="318dp"
+        android:layout_marginLeft="318dp"
+        android:layout_marginTop="-23dp"
         app:srcCompat="@mipmap/ic_archive_unclicked_layer" />
 
     <ImageView
@@ -85,9 +87,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="144dp"
-        android:layout_marginLeft="144dp"
-        android:layout_marginTop="-22dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginLeft="128dp"
+        android:layout_marginTop="-26dp"
         app:srcCompat="@mipmap/ic_direct_message_layer" />
 
     <ImageView
@@ -97,9 +99,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="89dp"
-        android:layout_marginLeft="89dp"
-        android:layout_marginTop="-20dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="-23dp"
         app:srcCompat="@mipmap/ic_comment_layer" />
 
     <ImageView
@@ -109,20 +111,20 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="-21dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="-23dp"
         app:srcCompat="@mipmap/ic_heart_unclicked_layer" />
 
     <TextView
         android:id="@+id/bodyText"
-        android:layout_width="match_parent"
+        android:layout_width="341dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bottomUsername"
         android:layout_alignStart="@+id/profilePerson"
         android:layout_alignLeft="@+id/profilePerson"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
         android:text="bodyText" />
 </RelativeLayout>

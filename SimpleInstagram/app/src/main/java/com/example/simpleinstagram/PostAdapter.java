@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.simpleinstagram.models.Post;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.topUsername.setText(post.getUser().getUsername());
         holder.bottomUsername.setText(post.getUser().getUsername());
         holder.bodyText.setText(post.getDescription());
+        Glide.with(context).load(post.getImage().getUrl()).into(holder.postImage);
     }
 
     // Clean all elements of the recycler
@@ -76,6 +78,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public ImageView ivDmImage;
         public ImageView ivArchiveImage;
         public TextView bodyText;
+        public ImageView postImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +92,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivDmImage = (ImageView) itemView.findViewById(R.id.dmImage);
             ivArchiveImage = (ImageView) itemView.findViewById(R.id.archiveImage);
             bodyText = (TextView) itemView.findViewById(R.id.bodyText);
+            postImage = (ImageView) itemView.findViewById(R.id.postImage);
         }
     }
 }
