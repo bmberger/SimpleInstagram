@@ -36,25 +36,25 @@
             app:layout_constraintVertical_bias="0.69" />
 
         <Button
-            android:id="@+id/refreshButton"
-            android:layout_width="353dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="8dp"
-            android:text="Refresh"
-            android:onClick="onRefreshClick"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postButton" />
-
-        <Button
             android:id="@+id/postButton"
             android:layout_width="354dp"
             android:layout_height="49dp"
             android:layout_marginStart="28dp"
             android:layout_marginLeft="28dp"
+            android:layout_marginTop="8dp"
             android:onClick="onPostClick"
             android:text="Post"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/takePhotoButton" />
+
+        <Button
+            android:id="@+id/takePhotoButton"
+            android:layout_width="354dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginLeft="28dp"
+            android:onClick="onLaunchCamera"
+            android:text="Take Photo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
 
@@ -67,13 +67,10 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:onClick="onLaunchCamera"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.45"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            tools:srcCompat="@android:drawable/ic_menu_camera" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

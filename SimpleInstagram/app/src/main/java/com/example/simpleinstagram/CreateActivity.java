@@ -3,6 +3,8 @@ package com.example.simpleinstagram;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,14 +24,13 @@ import androidx.core.content.FileProvider;
 
 import com.example.simpleinstagram.models.Post;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
-import java.util.List;
+import java.io.IOException;
 
 
 public class CreateActivity extends AppCompatActivity {
@@ -38,6 +39,7 @@ public class CreateActivity extends AppCompatActivity {
     Button createButton;
     Button refreshButton;
     EditText descriptionInput;
+    ImageView ivPostImage;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class CreateActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.descriptionInput);
         createButton = findViewById(R.id.postButton);
         descriptionInput = findViewById(R.id.descriptionInput);
+        ivPostImage = findViewById(R.id.ivPreview);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -72,16 +75,20 @@ public class CreateActivity extends AppCompatActivity {
         final String description = descriptionInput.getText().toString();
         final ParseUser user = ParseUser.getCurrentUser();
 
-        final File file = photoFile;
-        final ParseFile parseFile = new ParseFile(file);
-
-        createPost(description, parseFile, user);
+        savePost(description, photoFile, user);
     }
 
-    private void createPost(String description, ParseFile parseFile, ParseUser user) {
+    private void savePost(String description, File photoFile, ParseUser user) {
         final Post newPost = new Post();
         newPost.setDesciption(description);
-        newPost.setImage(parseFile);
+
+        if (photoFile == null || ivPostImage.getDrawable() == null) {
+            Log.e("Create activity", "No photo to submit");
+            Toast.makeText(CreateActivity.this, "No photo to submit", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        newPost.setImage(new ParseFile(photoFile));
         newPost.setUser(user);
 
         newPost.saveInBackground(new SaveCallback() {
@@ -94,32 +101,35 @@ public class CreateActivity extends AppCompatActivity {
                 }
             }
         });
+        Log.d("CreateActivity", "Success!");
+        descriptionInput.setText("");
+        ivPostImage.setImageResource(0);
     }
 
-    public void onRefreshClick(View v) {
-        loadTopPosts();
-    }
-
-    public void loadTopPosts() {
-        // queries for the top posts
-        final Post.Query postsQuery = new Post.Query();
-        postsQuery.getTop().withUser();
-
-        postsQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < objects.size(); i++) {
-                        Log.d("HomeActivity", "Post[" + i + "]"
-                                + objects.get(i).getDescription()
-                                + " username = " + objects.get(i).getUser().getUsername());
-                    }
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public void onRefreshClick(View v) {
+//        loadTopPosts();
+//    }
+//
+//    public void loadTopPosts() {
+//        // queries for the top posts
+//        final Post.Query postsQuery = new Post.Query();
+//        postsQuery.getTop().withUser();
+//
+//        postsQuery.findInBackground(new FindCallback<Post>() {
+//            @Override
+//            public void done(List<Post> objects, ParseException e) {
+//                if (e == null) {
+//                    for (int i = 0; i < objects.size(); i++) {
+//                        Log.d("HomeActivity", "Post[" + i + "]"
+//                                + objects.get(i).getDescription()
+//                                + " username = " + objects.get(i).getUser().getUsername());
+//                    }
+//                } else {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,8 +154,6 @@ public class CreateActivity extends AppCompatActivity {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
         Uri fileProvider = FileProvider.getUriForFile(CreateActivity.this,  "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -170,17 +178,45 @@ public class CreateActivity extends AppCompatActivity {
         return file;
     }
 
+    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(takenImage);
+                ivPostImage = (ImageView) findViewById(R.id.ivPreview);
+                ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
