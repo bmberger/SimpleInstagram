@@ -4,22 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseUser;
 
-public class ProfileActivity extends AppCompatActivity {
+
+public class CreateActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_create);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -27,27 +25,19 @@ public class ProfileActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home_tab:
-                        Intent homeIntent = new Intent(ProfileActivity.this, MainActivity.class);
+                        Intent homeIntent = new Intent(CreateActivity.this, MainActivity.class);
                         startActivity(homeIntent);
                         return true;
                     case R.id.post_tab:
-                        Intent activityIntent = new Intent(ProfileActivity.this, CreateActivity.class);
-                        startActivity(activityIntent);
                         return true;
                     case R.id.profile_tab:
+                        Intent profileIntent = new Intent(CreateActivity.this, ProfileActivity.class);
+                        startActivity(profileIntent);
                         return true;
                     default: return true;
                 }
             }
         });
-    }
-
-    public void onLogoutClick(View v) {
-        ParseUser.logOut();
-        ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
-
-        Intent logOutIntent = new Intent(ProfileActivity.this, LoginActivity.class);
-        startActivity(logOutIntent);
     }
 
     @Override
