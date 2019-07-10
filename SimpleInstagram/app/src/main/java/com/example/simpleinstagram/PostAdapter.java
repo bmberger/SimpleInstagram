@@ -1,6 +1,7 @@
 package com.example.simpleinstagram;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivArchiveImage = (ImageView) itemView.findViewById(R.id.archiveImage);
             bodyText = (TextView) itemView.findViewById(R.id.bodyText);
             postImage = (ImageView) itemView.findViewById(R.id.postImage);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post post = mPosts.get(position);
+
+                    Intent detailIntent = new Intent(v.getContext(), DetailsActivity.class);
+                    detailIntent.putExtra("post", post);
+                    v.getContext().startActivity(detailIntent);
+                }
+            });
         }
     }
 }

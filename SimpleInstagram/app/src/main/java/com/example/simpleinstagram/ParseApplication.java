@@ -32,7 +32,6 @@ public class ParseApplication extends Application {
         // any network interceptors must be added with the Configuration Builder given this syntax
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("leland-stanford") // should correspond to APP_ID env variable
-                //.clientKey("leland-stanford-junior")
                 .clientBuilder(builder)
                 .server("https://bmberger-fbu-instagram.herokuapp.com/parse").build());
     }
