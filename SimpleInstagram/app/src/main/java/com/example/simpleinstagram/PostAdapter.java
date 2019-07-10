@@ -2,6 +2,7 @@ package com.example.simpleinstagram;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.simpleinstagram.models.Post;
+
+import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
@@ -49,6 +56,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.bottomUsername.setText(post.getUser().getUsername());
         holder.bodyText.setText(post.getDescription());
         Glide.with(context).load(post.getImage().getUrl()).into(holder.postImage);
+        holder.relTimeAgo.setText(getRelativeTimeAgo(post.getDate()));
+    }
+
+    // relative timestamp on each tweet
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String instaFormat = "EEE MMM dd hh:mm:ss zzz yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(instaFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //reformat string and turn "minutes ago" into "m" and "seconds ago" to "s"
+        relativeDate = relativeDate.replaceAll(" second.* ago", "s");
+        relativeDate = relativeDate.replaceAll(" minute.* ago", "m");
+        relativeDate = relativeDate.replaceAll(" hour.* ago", "h");
+        relativeDate = relativeDate.replaceAll(" day.* ago", "d");
+        relativeDate = relativeDate.replaceAll(" week.* ago", "w");
+        relativeDate = relativeDate.replaceAll(" month.* ago", "mo");
+
+        return relativeDate;
     }
 
     // Clean all elements of the recycler
@@ -80,6 +114,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public ImageView ivArchiveImage;
         public TextView bodyText;
         public ImageView postImage;
+        public TextView relTimeAgo;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,6 +129,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivArchiveImage = (ImageView) itemView.findViewById(R.id.archiveImage);
             bodyText = (TextView) itemView.findViewById(R.id.bodyText);
             postImage = (ImageView) itemView.findViewById(R.id.postImage);
+            relTimeAgo = (TextView) itemView.findViewById(R.id.relTimeAgo);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

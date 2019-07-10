@@ -2,6 +2,7 @@ package com.example.simpleinstagram;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.simpleinstagram.models.Post;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
     ImageView ivProfileImage;
@@ -21,6 +26,7 @@ public class DetailsActivity extends AppCompatActivity {
     ImageView ivArchiveImage;
     TextView bodyText;
     ImageView postImage;
+    TextView relTimeAgo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +42,7 @@ public class DetailsActivity extends AppCompatActivity {
         ivArchiveImage = (ImageView) findViewById(R.id.archiveImage);
         bodyText = (TextView) findViewById(R.id.bodyText);
         postImage = (ImageView) findViewById(R.id.postImage);
+        relTimeAgo = (TextView) findViewById(R.id.relTimeAgo);
 
         Post post = getIntent().getParcelableExtra("post");
 
@@ -43,7 +50,33 @@ public class DetailsActivity extends AppCompatActivity {
         bottomUsername.setText(post.getUser().getUsername());
         bodyText.setText(post.getDescription());
         Glide.with(this).load(post.getImage().getUrl()).into(postImage);
+        relTimeAgo.setText(getRelativeTimeAgo(post.getDate()));
+    }
 
+    // relative timestamp on each tweet
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String instaFormat = "EEE MMM dd hh:mm:ss zzz yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(instaFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //reformat string and turn "minutes ago" into "m" and "seconds ago" to "s"
+        relativeDate = relativeDate.replaceAll(" second.* ago", "s");
+        relativeDate = relativeDate.replaceAll(" minute.* ago", "m");
+        relativeDate = relativeDate.replaceAll(" hour.* ago", "h");
+        relativeDate = relativeDate.replaceAll(" day.* ago", "d");
+        relativeDate = relativeDate.replaceAll(" week.* ago", "w");
+        relativeDate = relativeDate.replaceAll(" month.* ago", "mo");
+
+        return relativeDate;
     }
 
     @Override

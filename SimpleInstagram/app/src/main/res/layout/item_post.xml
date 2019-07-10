@@ -127,4 +127,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
         android:text="bodyText" />
+
+    <TextView
+        android:id="@+id/relTimeAgo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/postImage"
+        android:layout_alignRight="@+id/postImage"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:text="relTimeAgo" />
 </RelativeLayout>

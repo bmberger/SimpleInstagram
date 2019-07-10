@@ -25,9 +25,9 @@ public class Post extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(ParseFile im) {
-        put(KEY_IMAGE, im);
-    }
+    public void setImage(ParseFile im) { put(KEY_IMAGE, im); }
+
+    public String getDate() { return String.valueOf(getCreatedAt()); }
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
