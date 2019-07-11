@@ -25,7 +25,7 @@ The following **stretch** features are implemented:
 - [x] User can load more posts once he or she reaches the bottom of the feed using infinite scrolling.
 - [x] Show the username and creation time for each post
 - [x] After the user submits a new post, show an indeterminate progress bar while the post is being uploaded to Parse
-- User Profiles:
+- User Profiles: 
   - [x] Allow the logged in user to add a profile photo
   - [x] Display the profile photo with each post
   - [x] Tapping on a post's username or profile photo goes to that user's profile page
@@ -38,8 +38,13 @@ The following **additional** features are implemented:
 - [x] Visible/invisible password with eye
 - [x] User can choose a photo from their gallery/camera roll for posting to their timeline
 - [x] User can choose a photo from their gallery/camera roll for changing their profile photo (as well as camera but that is the standard)
+- [x] User's profile activity was made flexible to different users - not just current user.
 - [x] Profile image is visible in details activity and in each place visible (timeline, details, and profile), it is in a circle shape.
 - [x] Any user can have a biography on their profile page
+- [x] Each user has a profile that you can scroll through all of their posts.
+- [x] Refresh on each user profile
+- [x] Infinite scrolling for user profile
+- [x] Each photo in the user profile has a clickable detail view
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
