@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ public class CreateActivity extends AppCompatActivity {
     Button refreshButton;
     EditText descriptionInput;
     ImageView ivPostImage;
+    ProgressBar pb;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class CreateActivity extends AppCompatActivity {
         createButton = findViewById(R.id.postButton);
         descriptionInput = findViewById(R.id.descriptionInput);
         ivPostImage = findViewById(R.id.ivPreview);
+        pb = findViewById(R.id.pbLoading);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -160,7 +163,9 @@ public class CreateActivity extends AppCompatActivity {
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
+            pb.setVisibility(ProgressBar.VISIBLE);
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            pb.setVisibility(ProgressBar.INVISIBLE);
         }
     }
 
