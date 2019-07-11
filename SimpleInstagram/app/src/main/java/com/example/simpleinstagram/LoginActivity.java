@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
     EditText usernameView;
     EditText passwordView;
+    ParseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (ParseUser.getCurrentUser() != null) {
+            user = ParseUser.getCurrentUser();
             launchApp();
         }
         usernameView = (EditText) findViewById(R.id.ivUsernameInput);
@@ -43,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onSignupClick(View view) {
         // Create the ParseUser
-        ParseUser user = new ParseUser();
+        user = new ParseUser();
 
         // Set core properties of user
         user.setUsername(usernameView.getText().toString());
@@ -67,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginClick(View view) {
         // Create the ParseUser
-        ParseUser user = new ParseUser();
+        user = new ParseUser();
         String username = usernameView.getText().toString();
         String password = passwordView.getText().toString();
 
@@ -88,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     private void launchApp() {
         Log.d(TAG, "Login Successful");
         final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("user", user);
         startActivity(intent);
         finish();
     }

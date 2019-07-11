@@ -36,26 +36,23 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class CreateActivity extends AppCompatActivity {
+public class ProfilePicActivity extends AppCompatActivity {
     public final static int PICK_PHOTO_CODE = 1046;
     BottomNavigationView bottomNavigationView;
     Button createButton;
-    Button refreshButton;
-    EditText descriptionInput;
     ImageView ivPostImage;
     ProgressBar pb;
     ParseUser user;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_profile_pic);
 
-        descriptionInput = findViewById(R.id.descriptionInput);
         createButton = findViewById(R.id.postButton);
-        descriptionInput = findViewById(R.id.descriptionInput);
         ivPostImage = findViewById(R.id.ivPreview);
         pb = findViewById(R.id.pbLoading);
-        user = ParseUser.getCurrentUser();
+        user = getIntent().getParcelableExtra("user");
+        ivPostImage = (ImageView) findViewById(R.id.ivPreview);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -63,13 +60,15 @@ public class CreateActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home_tab:
-                        Intent homeIntent = new Intent(CreateActivity.this, MainActivity.class);
+                        Intent homeIntent = new Intent(ProfilePicActivity.this, MainActivity.class);
                         startActivity(homeIntent);
                         return true;
                     case R.id.post_tab:
-                        return true;
+                        Intent postIntent = new Intent(ProfilePicActivity.this, CreateActivity.class);
+                        startActivity(postIntent);
+                    return true;
                     case R.id.profile_tab:
-                        Intent profileIntent = new Intent(CreateActivity.this, ProfileActivity.class);
+                        Intent profileIntent = new Intent(ProfilePicActivity.this, ProfileActivity.class);
                         profileIntent.putExtra("user", user);
                         startActivity(profileIntent);
                         return true;
@@ -80,39 +79,32 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void onPostClick(View v) {
-        final String description = descriptionInput.getText().toString();
         final ParseUser user = ParseUser.getCurrentUser();
-        savePost(description, photoFile, user);
+        saveProfilePic(photoFile, user);
     }
 
-    private void savePost(String description, File photoFile, ParseUser user) {
-        final Post newPost = new Post();
-        newPost.setDesciption(description);
-
+    private void saveProfilePic(File photoFile, ParseUser user) {
         if (photoFile == null || ivPostImage.getDrawable() == null) {
             Log.e("Create activity", "No photo to submit");
-            Toast.makeText(CreateActivity.this, "No photo to submit", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfilePicActivity.this, "No photo to submit", Toast.LENGTH_LONG).show();
             return;
         }
 
         Bitmap finalPostImage = ((BitmapDrawable)ivPostImage.getDrawable()).getBitmap();
+        user.put("profilepic", getParseFile(finalPostImage));
 
-        newPost.setImage(getParseFile(finalPostImage));
-        newPost.setUser(user);
-
-        newPost.saveInBackground(new SaveCallback() {
+        user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e == null) {
-                    Log.d("CreateActivity", "Create post");
+                if (e != null) {
+                    e.printStackTrace();;
                 } else {
-                    Log.d("CreateActivity", "It was a failure - caio");
-                    e.printStackTrace();
+                    Log.d("ProfileActivity", "Successful profile pic upload");
                 }
             }
         });
+
         Log.d("CreateActivity", "Success!");
-        descriptionInput.setText("");
         ivPostImage.setImageResource(0);
         photoFile = null;
     }
@@ -148,10 +140,9 @@ public class CreateActivity extends AppCompatActivity {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(CreateActivity.this,  "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(ProfilePicActivity.this,  "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             pb.setVisibility(ProgressBar.VISIBLE);
@@ -221,9 +212,6 @@ public class CreateActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                ivPostImage = (ImageView) findViewById(R.id.ivPreview);
                 ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();

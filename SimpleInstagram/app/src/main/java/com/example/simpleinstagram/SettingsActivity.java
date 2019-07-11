@@ -1,59 +1,45 @@
 package com.example.simpleinstagram;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseFile;
+import com.parse.Parse;
 import com.parse.ParseUser;
 
-import org.w3c.dom.Text;
-
-public class ProfileActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
-    ImageView settingsView;
     ParseUser user;
-    TextView username;
-    ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_settings);
 
         user = getIntent().getParcelableExtra("user");
-        username = (TextView) findViewById(R.id.tvUsername);
-        profileImage = (ImageView) findViewById(R.id.ivUserPhoto);
-
-        username.setText(user.getUsername());
-        if (user.getParseFile("profilepic") != null) {
-            Glide.with(this).load(user.getParseFile("profilepic").getUrl()).apply(RequestOptions.circleCropTransform()).into(profileImage);
-        }
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home_tab:
-                        Intent homeIntent = new Intent(ProfileActivity.this, MainActivity.class);
+                        Intent homeIntent = new Intent(SettingsActivity.this, MainActivity.class);
                         startActivity(homeIntent);
                         return true;
                     case R.id.post_tab:
-                        Intent activityIntent = new Intent(ProfileActivity.this, CreateActivity.class);
+                        Intent activityIntent = new Intent(SettingsActivity.this, CreateActivity.class);
                         startActivity(activityIntent);
                         return true;
                     case R.id.profile_tab:
+                        Intent profileIntent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                        profileIntent.putExtra("user", user);
+                        startActivity(profileIntent);
                         return true;
                     default: return true;
                 }
@@ -61,20 +47,29 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void onSettingsClick(MenuItem mi) {
-        Intent logOutIntent = new Intent(ProfileActivity.this, SettingsActivity.class);
-        ParseUser myUser = ParseUser.getCurrentUser();
-        logOutIntent.putExtra("user", myUser);
+    public void onLogoutClick(View v) {
+        ParseUser.logOut();
+        ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
+
+        Intent logOutIntent = new Intent(SettingsActivity.this, LoginActivity.class);
         startActivity(logOutIntent);
+    }
+
+    public void onChangeProfilePicClick(View v) {
+        Intent getPicIntent = new Intent(SettingsActivity.this, ProfilePicActivity.class);
+        getPicIntent.putExtra("user", user);
+        startActivity(getPicIntent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_layout_profile, menu);
+        getMenuInflater().inflate(R.menu.menu_layout, menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // ** SET PROFILE's USERNAME HERE
-        getSupportActionBar().setTitle(username.getText());
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_brand_round);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         return true;
     }
 }

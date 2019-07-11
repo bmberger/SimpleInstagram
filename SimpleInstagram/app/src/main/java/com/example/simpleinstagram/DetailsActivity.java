@@ -10,7 +10,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.simpleinstagram.models.Post;
+import com.parse.ParseUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +52,9 @@ public class DetailsActivity extends AppCompatActivity {
         bottomUsername.setText(post.getUser().getUsername());
         bodyText.setText(post.getDescription());
         Glide.with(this).load(post.getImage().getUrl()).into(postImage);
+        if (post.getUser().getParseFile("profilepic") != null) {
+            Glide.with(this).load(post.getUser().getParseFile("profilepic").getUrl()).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
+        }
         relTimeAgo.setText(getRelativeTimeAgo(post.getDate()));
     }
 

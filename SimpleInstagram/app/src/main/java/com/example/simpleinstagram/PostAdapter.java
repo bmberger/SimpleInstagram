@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.simpleinstagram.models.Post;
 
 import org.w3c.dom.Text;
@@ -55,6 +56,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.topUsername.setText(post.getUser().getUsername());
         holder.bottomUsername.setText(post.getUser().getUsername());
         holder.bodyText.setText(post.getDescription());
+        if (post.getUser().getParseFile("profilepic") != null) {
+            Glide.with(context).load(post.getUser().getParseFile("profilepic").getUrl()).apply(RequestOptions.circleCropTransform()).into(holder.ivProfileImage);
+        }
         Glide.with(context).load(post.getImage().getUrl()).into(holder.postImage);
         holder.relTimeAgo.setText(getRelativeTimeAgo(post.getDate()));
     }
@@ -132,6 +136,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             relTimeAgo = (TextView) itemView.findViewById(R.id.relTimeAgo);
 
             itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post post = mPosts.get(position);
+
+                    Intent detailIntent = new Intent(v.getContext(), DetailsActivity.class);
+                    detailIntent.putExtra("post", post);
+                    v.getContext().startActivity(detailIntent);
+                }
+            });
+
+            ivHeartImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
