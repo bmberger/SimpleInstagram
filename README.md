@@ -39,6 +39,7 @@ The following **additional** features are implemented:
 - [x] User can choose a photo from their gallery/camera roll for posting to their timeline
 - [x] User can choose a photo from their gallery/camera roll for changing their profile photo (as well as camera but that is the standard)
 - [x] Profile image is visible in details activity and in each place visible (timeline, details, and profile), it is in a circle shape.
+- [x] Any user can have a biography on their profile page
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
