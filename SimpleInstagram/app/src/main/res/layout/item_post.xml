@@ -9,18 +9,18 @@
 
     <ImageView
         android:id="@+id/postImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="349dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginLeft="31dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginTop="33dp"
-        android:layout_marginEnd="31dp"
-        android:layout_marginRight="31dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,8 +37,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="68dp"
-        android:layout_marginLeft="68dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginLeft="46dp"
         android:layout_marginTop="8dp"
         android:text="username"
         android:textStyle="bold" />
@@ -50,8 +50,8 @@
         android:layout_below="@+id/heartImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="29dp"
-        android:layout_marginLeft="29dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
         android:text="username"
         android:textStyle="bold" />
@@ -63,8 +63,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="-1dp"
+        android:layout_marginLeft="-1dp"
         android:layout_marginTop="1dp"
         app:srcCompat="@mipmap/ic_profile_clicked_layer" />
 
@@ -75,9 +75,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="318dp"
-        android:layout_marginLeft="318dp"
-        android:layout_marginTop="-23dp"
+        android:layout_marginStart="349dp"
+        android:layout_marginLeft="349dp"
+        android:layout_marginTop="-13dp"
         app:srcCompat="@mipmap/ic_archive_unclicked_layer" />
 
     <ImageView
@@ -87,9 +87,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="128dp"
-        android:layout_marginLeft="128dp"
-        android:layout_marginTop="-26dp"
+        android:layout_marginStart="93dp"
+        android:layout_marginLeft="93dp"
+        android:layout_marginTop="-19dp"
         app:srcCompat="@mipmap/ic_direct_message_layer" />
 
     <ImageView
@@ -99,9 +99,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="76dp"
-        android:layout_marginLeft="76dp"
-        android:layout_marginTop="-23dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginLeft="47dp"
+        android:layout_marginTop="-18dp"
         app:srcCompat="@mipmap/ic_comment_layer" />
 
     <ImageView
@@ -111,21 +111,21 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="-23dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginTop="-17dp"
         app:srcCompat="@mipmap/ic_heart_unclicked_layer" />
 
     <TextView
         android:id="@+id/bodyText"
-        android:layout_width="341dp"
+        android:layout_width="393dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bottomUsername"
         android:layout_alignStart="@+id/profilePerson"
         android:layout_alignLeft="@+id/profilePerson"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="bodyText" />
 
     <TextView
@@ -136,7 +136,7 @@
         android:layout_alignRight="@+id/postImage"
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
         android:text="relTimeAgo" />
 </RelativeLayout>

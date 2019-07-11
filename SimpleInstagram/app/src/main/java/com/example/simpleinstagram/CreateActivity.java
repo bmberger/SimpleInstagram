@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,12 +31,13 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
 
 public class CreateActivity extends AppCompatActivity {
-    private static final String imagePath = "flower.jpg";
+    public final static int PICK_PHOTO_CODE = 1046;
     BottomNavigationView bottomNavigationView;
     Button createButton;
     Button refreshButton;
@@ -77,7 +79,6 @@ public class CreateActivity extends AppCompatActivity {
     public void onPostClick(View v) {
         final String description = descriptionInput.getText().toString();
         final ParseUser user = ParseUser.getCurrentUser();
-
         savePost(description, photoFile, user);
     }
 
@@ -91,7 +92,9 @@ public class CreateActivity extends AppCompatActivity {
             return;
         }
 
-        newPost.setImage(new ParseFile(photoFile));
+        Bitmap finalPostImage = ((BitmapDrawable)ivPostImage.getDrawable()).getBitmap();
+
+        newPost.setImage(getParseFile(finalPostImage));
         newPost.setUser(user);
 
         newPost.saveInBackground(new SaveCallback() {
@@ -100,6 +103,7 @@ public class CreateActivity extends AppCompatActivity {
                 if (e == null) {
                     Log.d("CreateActivity", "Create post");
                 } else {
+                    Log.d("CreateActivity", "It was a failure - caio");
                     e.printStackTrace();
                 }
             }
@@ -107,32 +111,16 @@ public class CreateActivity extends AppCompatActivity {
         Log.d("CreateActivity", "Success!");
         descriptionInput.setText("");
         ivPostImage.setImageResource(0);
+        photoFile = null;
     }
 
-//    public void onRefreshClick(View v) {
-//        loadTopPosts();
-//    }
-//
-//    public void loadTopPosts() {
-//        // queries for the top posts
-//        final Post.Query postsQuery = new Post.Query();
-//        postsQuery.getTop().withUser();
-//
-//        postsQuery.findInBackground(new FindCallback<Post>() {
-//            @Override
-//            public void done(List<Post> objects, ParseException e) {
-//                if (e == null) {
-//                    for (int i = 0; i < objects.size(); i++) {
-//                        Log.d("HomeActivity", "Post[" + i + "]"
-//                                + objects.get(i).getDescription()
-//                                + " username = " + objects.get(i).getUser().getUsername());
-//                    }
-//                } else {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
+    public static ParseFile getParseFile(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        byte[] image = stream.toByteArray();
+
+        return new ParseFile(image);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -166,6 +154,18 @@ public class CreateActivity extends AppCompatActivity {
             pb.setVisibility(ProgressBar.VISIBLE);
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             pb.setVisibility(ProgressBar.INVISIBLE);
+        }
+    }
+
+    public void onPickPhoto(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
         }
     }
 
@@ -224,6 +224,22 @@ public class CreateActivity extends AppCompatActivity {
                 ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PICK_PHOTO_CODE) {
+            if (data != null) {
+                Uri photoUri = data.getData();
+                photoFile = new File(photoUri.getPath());
+                Bitmap selectedImage = null;
+                try {
+                    selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                } catch (IOException e) {
+                   e.printStackTrace();
+                }
+                //Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
+
+                //// Load the selected image into a preview
+                ivPostImage = (ImageView) findViewById(R.id.ivPreview);
+                ivPostImage.setImageBitmap(selectedImage);
             }
         }
     }
