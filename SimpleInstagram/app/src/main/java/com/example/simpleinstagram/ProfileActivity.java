@@ -10,14 +10,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.simpleinstagram.models.Post;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
@@ -26,6 +37,11 @@ public class ProfileActivity extends AppCompatActivity {
     TextView username;
     ImageView profileImage;
     TextView bio;
+
+    PostAdapter postAdapter;
+    ArrayList<Post> posts;
+    RecyclerView rvPosts;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +81,51 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        setupRecyclerView();
+        setupRefresh();
+        loadPosts(true);
+    }
+
+    public void setupRefresh() {
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                postAdapter.clear(); // clear old items
+                loadPosts(true); // add new items
+                swipeContainer.setRefreshing(false); // refresh is over
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    public void setupRecyclerView() {
+        // find the Recycler View
+        rvPosts = (RecyclerView) findViewById(R.id.rvUserPosts);
+        posts = new ArrayList<>();
+        // construct the adapter from this datasource
+        postAdapter = new PostAdapter(posts);
+        // set adapter
+        rvPosts.setAdapter(postAdapter);
+        // RecyclerView setup (layout manager, use adapter)
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvPosts.setLayoutManager(linearLayoutManager);
+
+        rvPosts.addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) rvPosts.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+                loadPosts(false);
+            }
+        });
     }
 
     public void onSettingsClick(MenuItem mi) {
@@ -82,5 +143,33 @@ public class ProfileActivity extends AppCompatActivity {
         // ** SET PROFILE's USERNAME HERE
         getSupportActionBar().setTitle(username.getText());
         return true;
+    }
+
+    public void loadPosts(final boolean firstTime) {
+        // queries for the top posts
+        final Post.Query postsQuery = new Post.Query();
+        postsQuery.getTop().withUser();
+        postsQuery.addDescendingOrder("createdAt");
+        postsQuery.whereEqualTo("user", user);
+        Date maxDate;
+
+        if (!firstTime) {
+            maxDate = posts.get(posts.size() - 1).getCreatedAt();
+            postsQuery.whereLessThan("createdAt", maxDate);
+        }
+        postsQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        Post post = objects.get(i);
+                        posts.add(post);
+                        postAdapter.notifyItemInserted(posts.size() - 1);
+                    }
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

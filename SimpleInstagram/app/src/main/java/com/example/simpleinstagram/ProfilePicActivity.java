@@ -226,7 +226,6 @@ public class ProfilePicActivity extends AppCompatActivity {
                 } catch (IOException e) {
                    e.printStackTrace();
                 }
-                //Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
 
                 //// Load the selected image into a preview
                 ivPostImage = (ImageView) findViewById(R.id.ivPreview);
