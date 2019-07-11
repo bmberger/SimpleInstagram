@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.simpleinstagram.models.Post;
+import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
@@ -156,6 +157,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     Intent detailIntent = new Intent(v.getContext(), DetailsActivity.class);
                     detailIntent.putExtra("post", post);
                     v.getContext().startActivity(detailIntent);
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post post = mPosts.get(position);
+                    ParseUser user = post.getUser();
+
+                    Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+                    profileIntent.putExtra("user", user);
+                    v.getContext().startActivity(profileIntent);
+                }
+            });
+
+            topUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post post = mPosts.get(position);
+                    ParseUser user = post.getUser();
+
+                    Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+                    profileIntent.putExtra("user", user);
+                    v.getContext().startActivity(profileIntent);
+                }
+            });
+
+            bottomUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post post = mPosts.get(position);
+                    ParseUser user = post.getUser();
+
+                    Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+                    profileIntent.putExtra("user", user);
+                    v.getContext().startActivity(profileIntent);
                 }
             });
         }

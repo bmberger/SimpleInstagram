@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import com.parse.ParseUser;
 public class SettingsActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ParseUser user;
+    EditText bioInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         user = getIntent().getParcelableExtra("user");
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bioInput = (EditText) findViewById(R.id.bioInput);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -59,6 +63,15 @@ public class SettingsActivity extends AppCompatActivity {
         Intent getPicIntent = new Intent(SettingsActivity.this, ProfilePicActivity.class);
         getPicIntent.putExtra("user", user);
         startActivity(getPicIntent);
+    }
+
+    public void onChangeBiographyClick(View v) {
+        if (bioInput != null) {
+            user.put("bio", String.valueOf(bioInput.getText()));
+            bioInput.setText("");
+        } else {
+            Toast.makeText(this, "Enter a biography first", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

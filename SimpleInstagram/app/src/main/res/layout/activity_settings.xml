@@ -42,13 +42,41 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="104dp"
         android:layout_marginLeft="104dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="76dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:onClick="onChangeProfilePicClick"
         android:text="Change Profile Picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeBiographyButton" />
+
+    <Button
+        android:id="@+id/changeBiographyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="104dp"
+        android:layout_marginLeft="104dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="onChangeBiographyClick"
+        android:text="Change Biography"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.145"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bioInput" />
+
+    <EditText
+        android:id="@+id/bioInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="196dp"
+        android:ems="10"
+        android:hint="Enter Biography"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

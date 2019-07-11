@@ -25,6 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     ParseUser user;
     TextView username;
     ImageView profileImage;
+    TextView bio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,15 @@ public class ProfileActivity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("user");
         username = (TextView) findViewById(R.id.tvUsername);
         profileImage = (ImageView) findViewById(R.id.ivUserPhoto);
+        bio = (TextView) findViewById(R.id.tvBiography) ;
 
         username.setText(user.getUsername());
         if (user.getParseFile("profilepic") != null) {
             Glide.with(this).load(user.getParseFile("profilepic").getUrl()).apply(RequestOptions.circleCropTransform()).into(profileImage);
+        }
+
+        if (user.get("bio") != null) {
+            bio.setText(String.valueOf(user.get("bio")));
         }
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
