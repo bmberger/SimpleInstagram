@@ -3,6 +3,7 @@ package com.example.simpleinstagram;
 import android.app.Application;
 import android.content.Intent;
 
+import com.example.simpleinstagram.models.Like;
 import com.example.simpleinstagram.models.Post;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -16,6 +17,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(Like.class);
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
 

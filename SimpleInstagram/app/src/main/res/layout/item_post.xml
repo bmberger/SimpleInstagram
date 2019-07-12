@@ -18,7 +18,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginBottom="19dp"
@@ -87,9 +87,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="93dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginTop="-19dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="-23dp"
         app:srcCompat="@mipmap/ic_direct_message_layer" />
 
     <ImageView
@@ -99,9 +99,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginLeft="47dp"
-        android:layout_marginTop="-18dp"
+        android:layout_marginStart="77dp"
+        android:layout_marginLeft="77dp"
+        android:layout_marginTop="-21dp"
         app:srcCompat="@mipmap/ic_comment_layer" />
 
     <ImageView
@@ -111,9 +111,9 @@
         android:layout_below="@+id/postImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="-2dp"
-        android:layout_marginLeft="-2dp"
-        android:layout_marginTop="-17dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-21dp"
         app:srcCompat="@mipmap/ic_heart_unclicked_layer" />
 
     <TextView
@@ -139,4 +139,16 @@
         android:layout_marginEnd="26dp"
         android:layout_marginRight="26dp"
         android:text="relTimeAgo" />
+
+    <TextView
+        android:id="@+id/tvNumberOfLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-4dp"
+        android:layout_marginLeft="-4dp"
+        android:layout_marginTop="407dp"
+        android:layout_toEndOf="@+id/heartImage"
+        android:layout_toRightOf="@+id/heartImage"
+        android:text="200" />
 </RelativeLayout>

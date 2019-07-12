@@ -14,13 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.simpleinstagram.models.Like;
 import com.example.simpleinstagram.models.Post;
+import com.parse.FindCallback;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,9 +53,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     // bind the values of tweet based on the position of the element
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // get data according to position
-        Post post = mPosts.get(position);
+        final Post post = mPosts.get(position);
+
+        // list of all Like objects on post
+        final ArrayList<Like> likes = new ArrayList<Like>();
 
         // populate the views according to this data - username, body, and image via Glide
         holder.topUsername.setText(post.getUser().getUsername());
@@ -62,6 +69,53 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
         Glide.with(context).load(post.getImage().getUrl()).into(holder.postImage);
         holder.relTimeAgo.setText(getRelativeTimeAgo(post.getDate()));
+
+        ParseQuery<Like> likeQuery = new ParseQuery<Like>(Like.class);
+        likeQuery.whereEqualTo("post", post);
+        likeQuery.findInBackground(new FindCallback<Like>() {
+            @Override
+            public void done(List<Like> newLikes, com.parse.ParseException e) {
+                Glide.with(context).load(R.mipmap.ic_heart_unclicked_layer).into(holder.ivHeartImage);
+                for (int i = 0; i < newLikes.size() - 1; i++) {
+                    if (post.getUser().getObjectId().equals(newLikes.get(i).getUser().getObjectId())) {
+                        Glide.with(context).load(R.mipmap.ic_heart_clicked_layer).into(holder.ivHeartImage);
+                    }
+                }
+                likes.addAll(newLikes);
+            }
+        });
+        holder.numLikes.setText(String.valueOf(likes.size())); // total count of likes
+
+        holder.ivHeartImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int indexOfLikedPost = 0;
+
+                // unlike
+                for (int i = 0; i < likes.size(); i++) {
+                        if (ParseUser.getCurrentUser().getObjectId().equals(likes.get(i).getUser().getObjectId())) {
+                            Glide.with(context).load(R.mipmap.ic_heart_unclicked_layer).into(holder.ivHeartImage);
+                            indexOfLikedPost = i;
+
+                            holder.numLikes.setText(String.valueOf(likes.size() - 1));
+                            likes.get(i).deleteInBackground();
+                            likes.remove(i);
+                            return;
+                        }
+                }
+
+                // like
+                Glide.with(context).load(R.mipmap.ic_heart_clicked_layer).into(holder.ivHeartImage);
+                holder.numLikes.setText(String.valueOf(likes.size() + 1));
+
+                Like like = new Like();
+                like.setPost(post);
+                like.setUser(ParseUser.getCurrentUser());
+                like.saveInBackground();
+                likes.add(like);
+
+            }
+        });
     }
 
     // relative timestamp on each tweet
@@ -120,6 +174,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public TextView bodyText;
         public ImageView postImage;
         public TextView relTimeAgo;
+        public TextView numLikes;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -135,6 +190,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             bodyText = (TextView) itemView.findViewById(R.id.bodyText);
             postImage = (ImageView) itemView.findViewById(R.id.postImage);
             relTimeAgo = (TextView) itemView.findViewById(R.id.relTimeAgo);
+            numLikes = (TextView) itemView.findViewById(R.id.tvNumberOfLikes);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
