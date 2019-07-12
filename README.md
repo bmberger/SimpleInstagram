@@ -2,7 +2,7 @@
 
 **SimpleInstagram** is a photo sharing app using Parse as its backend.
 
-Time spent: **X** hours spent in total
+Time spent: **25** hours spent in total
 
 ## User Stories
 
@@ -44,11 +44,6 @@ The following **additional** features are implemented:
 - [x] Refresh on each user profile
 - [x] Infinite scrolling for user profile
 - [x] Each photo in the user profile has a clickable detail view
-
-Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
-
-1.
-2.
 
 ## Video Walkthrough
 
